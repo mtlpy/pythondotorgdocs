@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installing &mdash; Python.org Website 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Python.org Website 1.0 documentation" href="index.html" />
+    <link rel="next" title="Contributing" href="contributing.html" />
+    <link rel="prev" title="Welcome to Python.org Website’s documentation!" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="contributing.html" title="Contributing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Python.org Website’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Python.org Website 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="installing">
+<h1>Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="using-vagrant">
+<h2>Using Vagrant<a class="headerlink" href="#using-vagrant" title="Permalink to this headline">¶</a></h2>
+<p>You can ignore the below instructions by using Vagrant:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ vagrant up
+$ vagrant ssh
+</pre></div>
+</div>
+<p>The box will be provisioned by Chef with Python 3.3, a virtualenv set up with
+requirements installed, and a database ready to use. The virtualenv is
+activated upon login.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You will need to run <code class="docutils literal"><span class="pre">./manage.py</span> <span class="pre">createsuperuser</span></code> to use the admin.</p>
+</div>
+</div>
+<div class="section" id="getting-started">
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>First, clone the repository:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ git clone git@github.com:python/pythondotorg.git
+</pre></div>
+</div>
+<p>You&#8217;ll want a virtualenv. Python 3.3 actually includes virtualenv built-in, so
+you can do:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ pyvenv-3.3 &lt;env&gt;
+$ source &lt;env&gt;/bin/activate
+</pre></div>
+</div>
+<p>But you can also use your existing virtualenv and virtualenvwrapper:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ virtualenv --python=python3.3 &lt;env&gt;
+$ mkvirtualenv --python=python3.3 &lt;env&gt;
+</pre></div>
+</div>
+<p>And then you&#8217;ll need to install dependencies:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ pip install -r dev-requirements.txt
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">For deployment, you can just use <code class="docutils literal"><span class="pre">requirements.txt</span></code>.</p>
+</div>
+<p>To change database configuration, you can add the following setting to
+<code class="docutils literal"><span class="pre">pydotorg/settings/local.py</span></code> (or you can use the <code class="docutils literal"><span class="pre">DATABASE_URL</span></code> environment
+variable):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;default&#39;</span><span class="p">:</span> <span class="n">dj_database_url</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&#39;sqlite:///pydotorg.db&#39;</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Not it&#8217;s time to run migrations:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ ./manage.py migrate
+</pre></div>
+</div>
+<p>To compile and compress static media, you will need <em>compass</em> and
+<em>yui-compressor</em>:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ gem install bundler
+$ bundle install
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">To install <em>yui-compressor</em>, use your OS&#8217;s package manager or download it
+directly then add the executable to your <code class="docutils literal"><span class="pre">PATH</span></code>.</p>
+</div>
+<p>To load all fixture files:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ ./manage.py load_dev_fixtures
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This will download an approximately 11 MB gzipped set of fixtures that are
+sanitized of sensitive user data and then loaded into your local database.</p>
+</div>
+<p>Finally, start the development server:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ ./manage.py runserver
+</pre></div>
+</div>
+</div>
+<div class="section" id="generating-css-files-automatically">
+<h2>Generating CSS files automatically<a class="headerlink" href="#generating-css-files-automatically" title="Permalink to this headline">¶</a></h2>
+<p>Due to performance issues of <a class="reference external" href="https://github.com/cyberdelia/django-pipeline/issues/313">django-pipeline</a>, we are using a dummy compiler
+<code class="docutils literal"><span class="pre">pydotorg.compilers.DummySASSCompiler</span></code> in development mode. To generate CSS
+files, use <code class="docutils literal"><span class="pre">sass</span></code> itself in a separate terminal window:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ cd static
+$ sass --compass --scss -I $(dirname $(dirname $(gem which susy))) --trace --watch sass/style.scss:sass/style.css
+</pre></div>
+</div>
+</div>
+<div class="section" id="running-tests">
+<h2>Running tests<a class="headerlink" href="#running-tests" title="Permalink to this headline">¶</a></h2>
+<p>To run the test suite:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ ./manage.py test
+</pre></div>
+</div>
+<p>To generate coverage report:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ coverage run manage.py test
+$ coverage report
+</pre></div>
+</div>
+<p>Generate an HTML report with <code class="docutils literal"><span class="pre">coverage</span> <span class="pre">html</span></code> if you like.</p>
+</div>
+<div class="section" id="useful-commands">
+<h2>Useful commands<a class="headerlink" href="#useful-commands" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Create a super user (for a new DB):</p>
+<div class="highlight-python"><div class="highlight"><pre>$ ./manage.py createsuperuser
+</pre></div>
+</div>
+</li>
+<li><p class="first">Want to save some data from your DB before nuking it, and then load it back
+in?:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ ./manage.py dumpdata --format=json --indent=4 $APPNAME &gt; fixtures/$APPNAME.json
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
+<p>If you hit an error getting this repo setup, file a pull request with helpful
+information so others don&#8217;t have similar problems.</p>
+<div class="section" id="python-3-3-and-osx-10-8-2">
+<h3>Python 3.3 and OSX 10.8.2<a class="headerlink" href="#python-3-3-and-osx-10-8-2" title="Permalink to this headline">¶</a></h3>
+<p>Homebrew&#8217;s recipe for Python 3.3 has some difficulty installing distribute
+and pip in a virtualenv. The <a class="reference external" href="https://www.python.org/download/">python.org installer for OSX</a>
+may work better, if you&#8217;re having trouble.</p>
+</div>
+<div class="section" id="freetype-not-found-on-osx">
+<h3>Freetype not found on OSX<a class="headerlink" href="#freetype-not-found-on-osx" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre>_imagingft.c:60:10: fatal error: &#39;freetype/fterrors.h&#39; file not found
+#include &lt;freetype/fterrors.h&gt;
+         ^
+1 error generated.
+error: command &#39;clang&#39; failed with exit status 1
+</pre></div>
+</div>
+<p>If you&#8217;ve installed <em>freetype</em> (<code class="docutils literal"><span class="pre">brew</span> <span class="pre">install</span> <span class="pre">freetype</span></code>), you may need
+to symlink version 2 into location for version 1 as mentioned by <a class="reference external" href="http://stackoverflow.com/questions/20325473/error-installing-python-image-library-using-pip-on-mac-os-x-10-9">this
+Stack Overflow
+question</a>.</p>
+<p>Freetype 2.5.3 is known to work with this repository:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ ln -s /usr/local/include/freetype2 /usr/local/include/freetype
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="building-documentation">
+<h2>Building documentation<a class="headerlink" href="#building-documentation" title="Permalink to this headline">¶</a></h2>
+<p>If you want to install the default Read the Docs theme, you can do:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ pip install -r docs-requirements.txt
+</pre></div>
+</div>
+<p>To build this documentation locally:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ make -C docs/ htmlview
+</pre></div>
+</div>
+<p>If you don&#8217;t want to open the browser automatically, you can do:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ make -C docs/ html
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installing</a><ul>
+<li><a class="reference internal" href="#using-vagrant">Using Vagrant</a></li>
+<li><a class="reference internal" href="#getting-started">Getting started</a></li>
+<li><a class="reference internal" href="#generating-css-files-automatically">Generating CSS files automatically</a></li>
+<li><a class="reference internal" href="#running-tests">Running tests</a></li>
+<li><a class="reference internal" href="#useful-commands">Useful commands</a></li>
+<li><a class="reference internal" href="#troubleshooting">Troubleshooting</a><ul>
+<li><a class="reference internal" href="#python-3-3-and-osx-10-8-2">Python 3.3 and OSX 10.8.2</a></li>
+<li><a class="reference internal" href="#freetype-not-found-on-osx">Freetype not found on OSX</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#building-documentation">Building documentation</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to Python.org Website&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="contributing.html"
+                        title="next chapter">Contributing</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/install.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="contributing.html" title="Contributing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Python.org Website’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">Python.org Website 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Python Software Foundation.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>

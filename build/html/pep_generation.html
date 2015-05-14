@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>PEP Page Generation &mdash; Python.org Website 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Python.org Website 1.0 documentation" href="index.html" />
+    <link rel="prev" title="Administration" href="administration.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="administration.html" title="Administration"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Python.org Website 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pep-page-generation">
+<h1>PEP Page Generation<a class="headerlink" href="#pep-page-generation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="process-overview">
+<span id="pep-process"></span><h2>Process Overview<a class="headerlink" href="#process-overview" title="Permalink to this headline">¶</a></h2>
+<p>We are generating the PEP pages by lightly parsing and cleaning up the HTML output from the <a class="reference external" href="http://hg.python.org/peps/">PEP Mercurial Repository</a>.</p>
+<p>The process is as follows:</p>
+<ol class="arabic simple">
+<li>Clone and/or update the PEP repo located in <cite>settings.PEP_REPO_PATH</cite> to the latest revision.</li>
+<li>Run <cite>pep2html.py</cite></li>
+<li>Run <cite>genpepindex.py</cite></li>
+<li>Once all PEP HTML pages are generated, run <cite>./manage.py generate_pep_pages</cite></li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Steps 2 and 3 currently must be run using Python 2 and <strong>NOT</strong> Python 3 like the rest of Python.org</p>
+</div>
+<p>This process will be run periodically via cron to keep the PEP pages up to date.</p>
+</div>
+<div class="section" id="management-commands">
+<h2>Management Commands<a class="headerlink" href="#management-commands" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="generate-pep-pages">
+<h3>generate_pep_pages<a class="headerlink" href="#generate-pep-pages" title="Permalink to this headline">¶</a></h3>
+<p>This Django management command generates <cite>pages.Page</cite> objects based on the output of the existing PEP repository
+generation process. You run it like:</p>
+<div class="highlight-python"><div class="highlight"><pre>./manage.py generate_pep_pages
+</pre></div>
+</div>
+<p>To get verbose output run it like:</p>
+<div class="highlight-python"><div class="highlight"><pre>./manage.py generate_pep_pages --verbosity=2
+</pre></div>
+</div>
+<p>It uses the conversion code in the <cite>peps.converters</cite> module in an attempt to normalize the formatting for display
+purposes.</p>
+</div>
+<div class="section" id="dump-pep-pages">
+<h3>dump_pep_pages<a class="headerlink" href="#dump-pep-pages" title="Permalink to this headline">¶</a></h3>
+<p>This simply dumps our PEP related pages as JSON like dumpdata would do with a &#8211;pks options if the site was using
+Django 1.6 or newer. The dumpdata content is written to stdout just like a normal dumpdata command.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">PEP Page Generation</a><ul>
+<li><a class="reference internal" href="#process-overview">Process Overview</a></li>
+<li><a class="reference internal" href="#management-commands">Management Commands</a><ul>
+<li><a class="reference internal" href="#generate-pep-pages">generate_pep_pages</a></li>
+<li><a class="reference internal" href="#dump-pep-pages">dump_pep_pages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="administration.html"
+                        title="previous chapter">Administration</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/pep_generation.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="administration.html" title="Administration"
+             >previous</a> |</li>
+        <li><a href="index.html">Python.org Website 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Python Software Foundation.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>

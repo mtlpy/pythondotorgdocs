@@ -1,0 +1,225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Administration &mdash; Python.org Website 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Python.org Website 1.0 documentation" href="index.html" />
+    <link rel="next" title="PEP Page Generation" href="pep_generation.html" />
+    <link rel="prev" title="Contributing" href="contributing.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="pep_generation.html" title="PEP Page Generation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="contributing.html" title="Contributing"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Python.org Website 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="administration">
+<h1>Administration<a class="headerlink" href="#administration" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="navigation">
+<span id="id1"></span><h2>Navigation<a class="headerlink" href="#navigation" title="Permalink to this headline">¶</a></h2>
+<p>Navigation on the site is managed by the <a class="reference external" href="https://pypi.python.org/pypi/django-sitetree">Sitetree</a> application.  The hierarchy should be fairly obvious.  The biggest gotcha is when defining the URLs.</p>
+<p>Many URLs are defined using <a class="reference external" href="https://docs.djangoproject.com/en/dev/topics/http/urls/">Django&#8217;s URL system</a> however many are also simply defined as relative paths.  When editing a particular item in the Sitetree in the <em>Additional Settings</em> fieldset there is an option named <em>URL as pattern</em>.  If this option is checked the URL pattern is checked against the URLs defined by the Django applications. If it is left unchecked relative and absolute URLs can be entered.</p>
+</div>
+<div class="section" id="supernavs">
+<span id="supernav"></span><h2>Supernavs<a class="headerlink" href="#supernavs" title="Permalink to this headline">¶</a></h2>
+<p>The concept of a <em>Supernav</em> is used heavily on the site.  These are the larger bits of text and markup included in the main navigation drop downs.  These are implemented as specially named <a class="reference internal" href="#boxes"><em>Boxes</em></a>.  They are by convention named <code class="docutils literal"><span class="pre">supernav-*</span></code>, for example <code class="docutils literal"><span class="pre">templates/downloads/supernav.html</span></code>.</p>
+<p>Here is an example of what that looks like on the site.</p>
+<img alt="Example Supernav image" src="_images/supernav-example.png" />
+<p>The sub-nav items on the left are simply nested <a class="reference internal" href="#navigation"><em>Navigation</em></a> links in SiteTree relative to the &#8216;Download&#8217; item in the tree.  The larger <em>Download for Mac OSX</em> box however is what we refer to as the <em>supernav</em>.</p>
+<p>Most supernavs are updated automatically based on the underlying Django application content using signals.
+By convention the application will have a template named <code class="docutils literal"><span class="pre">supernav.html</span></code>. For example, upon saving any published <a class="reference internal" href="#downloads"><em>Release</em></a> a Django signal is fired to update the <code class="docutils literal"><span class="pre">supernav-python-downloads</span></code> box with the most current Python2 and Python3 releases.  In this case the markup is structured in a way to allow for the automatic OS detection Javascript to show the user the appropriate download links for the OS they are browsing with.</p>
+</div>
+<div class="section" id="pages">
+<span id="id2"></span><h2>Pages<a class="headerlink" href="#pages" title="Permalink to this headline">¶</a></h2>
+<p>Pages are individual entire pages of markup content.  They are require <code class="docutils literal"><span class="pre">Title</span></code>, <code class="docutils literal"><span class="pre">Path</span></code>, and <code class="docutils literal"><span class="pre">Content</span></code> to be acceptable in the system.  Note that Pages are implemented using a fall through system of URL routing so a user cannot override an existing defined Django URL on accident with a Page.</p>
+<p><strong>Fields and Descriptions</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Title:</th><td class="field-body">Title of the Page.  Will also be used as the <code class="docutils literal"><span class="pre">&lt;title&gt;&lt;/title&gt;</span></code> attribute in the markup.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Keywords:</th><td class="field-body">HTML META keywords for search engines</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Description:</th><td class="field-body">HTML META description for search engines</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Path:</th><td class="field-body">Relative URL path where the page will reside, excluding the initial slash.  <em>Example</em>: <code class="docutils literal"><span class="pre">about/psf/somepage/</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Content:</th><td class="field-body">The actual content of the page.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Markup Type:</th><td class="field-body">Type of markup contained in the <em>Content</em> field.  Options are: HTML, plain text, ReStructured Text, and Markdown</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Is Published:</th><td class="field-body">Controls whether or not the page is visible on the site.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Template Name:</th><td class="field-body">By default Pages use the template <code class="docutils literal"><span class="pre">templates/pages/default.html</span></code> to use a different template enter the template path here.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>NOTE</strong> Pages are automatically purge from Fastly.com upon save</p>
+</div>
+<div class="section" id="boxes">
+<span id="id3"></span><h2>Boxes<a class="headerlink" href="#boxes" title="Permalink to this headline">¶</a></h2>
+<p>Boxes are re-usable bits of HTML markup that are used throughout the site.  Things like sidebar info and specific areas of areas of pages with a richer design (i.e. landing pages) that would be cumbersome to edit as one large content textarea.</p>
+<p><strong>NOTE:</strong> There are <em>special boxes</em> that are automatically rebuilt using templates, see <a class="reference internal" href="#supernav"><em>Supernavs</em></a>.</p>
+</div>
+<div class="section" id="downloads-and-releases">
+<span id="downloads"></span><h2>Downloads and Releases<a class="headerlink" href="#downloads-and-releases" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">downloads</span></code> app stores all of the structured data regarding Python releases.  Each <code class="docutils literal"><span class="pre">Release</span></code> object has associated <code class="docutils literal"><span class="pre">ReleaseFile</span></code> objects that contain information on the various download formats Python.org
+supports.</p>
+<p>If the version you are creating should be considered the &#8220;latest&#8221; release for the major version in question (Python 2.x.x, 3.x.x, etc)
+then check the &#8216;Is this the latest release&#8217; checkbox.  When the <code class="docutils literal"><span class="pre">Release</span></code> is saved, the previous version will be automatically
+demoted for you and the new version will be used prominently on the site.  For example the download buttons and supernav links.</p>
+<p><strong>NOTE:</strong> If you make a mistake here, no worries you can just check the box and save on <strong>ANY</strong> version and promote it to being
+the latest release.</p>
+<p>To create a release you simply need to fill in the appropriate information.  Currently if a <code class="docutils literal"><span class="pre">Release</span></code> has an associated <code class="docutils literal"><span class="pre">Release</span> <span class="pre">Page</span></code> the system redirects to that to accommodate legacy content, but if the <code class="docutils literal"><span class="pre">Content</span></code> field is filled they are taken to the Release Detail page which shows the content and lists all of the associated downloadable files.</p>
+<p>Release Files have a checkbox named &#8216;Download button&#8217; that determines which binary/source package download link to display for a given OS.  This information is used by the OS detection JS on the site so pick the package in most widespread use. On Source distributions be sure to check the &#8216;Download button&#8217; for the .tgz version for widest compatibiity.</p>
+</div>
+<div class="section" id="jobs">
+<span id="id4"></span><h2>Jobs<a class="headerlink" href="#jobs" title="Permalink to this headline">¶</a></h2>
+<p>The Jobs application is used to display Python jobs on the site. The data items should be fairly self explanatory. There are a couple of things to keep in mind. Logged in users of the site can submit jobs for review.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status:</th><td class="field-body">Jobs enter the system in &#8216;review&#8217; status after the submitter has entered them. Only jobs in the &#8216;approved&#8217; state are displayed on the site.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Featured:</th><td class="field-body">Featured jobs are displayed more prominently on the landing page.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Comments:</th><td class="field-body">Users who have submitted a job and admin reviewers can make comments on a job. Emails will be sent to the other party in order to foster communication about job description and data.</td>
+</tr>
+</tbody>
+</table>
+<p>Currently the jobs functionality it masked and the URLs are redirected to the legacy site until the content can be updated.</p>
+</div>
+<div class="section" id="sponsors">
+<h2>Sponsors<a class="headerlink" href="#sponsors" title="Permalink to this headline">¶</a></h2>
+<p>The Sponsors app is a place to store PSF Sponsors. Sponsors have to be associated to a Company model from
+the companies app.  If they are marked as <cite>is_published</cite> they will be shown on the main sponsor page which
+is located at /sponsors/.</p>
+<p>If a Sponsor is marked as <cite>featured</cite> they will be included in the sponsor rotation on the main PSF landing
+page.  In the fourth &#8220;Sponsors&#8221; column.</p>
+</div>
+<div class="section" id="events">
+<h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
+<p>TODO</p>
+</div>
+<div class="section" id="companies">
+<h2>Companies<a class="headerlink" href="#companies" title="Permalink to this headline">¶</a></h2>
+<p>TODO</p>
+</div>
+<div class="section" id="success-stories">
+<h2>Success Stories<a class="headerlink" href="#success-stories" title="Permalink to this headline">¶</a></h2>
+<p>TODO</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Administration</a><ul>
+<li><a class="reference internal" href="#navigation">Navigation</a></li>
+<li><a class="reference internal" href="#supernavs">Supernavs</a></li>
+<li><a class="reference internal" href="#pages">Pages</a></li>
+<li><a class="reference internal" href="#boxes">Boxes</a></li>
+<li><a class="reference internal" href="#downloads-and-releases">Downloads and Releases</a></li>
+<li><a class="reference internal" href="#jobs">Jobs</a></li>
+<li><a class="reference internal" href="#sponsors">Sponsors</a></li>
+<li><a class="reference internal" href="#events">Events</a></li>
+<li><a class="reference internal" href="#companies">Companies</a></li>
+<li><a class="reference internal" href="#success-stories">Success Stories</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="contributing.html"
+                        title="previous chapter">Contributing</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="pep_generation.html"
+                        title="next chapter">PEP Page Generation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/administration.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="pep_generation.html" title="PEP Page Generation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="contributing.html" title="Contributing"
+             >previous</a> |</li>
+        <li><a href="index.html">Python.org Website 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Python Software Foundation.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>
